@@ -88,6 +88,8 @@ body.m-case #prog{display:flex}
 .panel.m .pgo{color:var(--m-acc)}
 .panel.e .pgo{color:var(--e-acc)}
 
+#note{position:fixed;left:50%;bottom:18px;translate:-50% 0;z-index:45;font:500 10px/1 Inter;letter-spacing:.16em;text-transform:uppercase;color:#fff;mix-blend-mode:difference;opacity:0;pointer-events:none;transition:opacity .6s}
+body.m-split #note{opacity:.55}
 /* ---------- wipe ---------- */
 #wipe{position:fixed;inset:0;z-index:90;display:grid;grid-template-rows:repeat(4,1fr);visibility:hidden;pointer-events:none}
 #wipe i{display:block;margin:-1px 0}
@@ -268,6 +270,8 @@ body.m-case #prog{display:flex}
     </div>
   </a>
 </div>
+
+<p id="note">Concept case studies · student portfolio work</p>
 
 <div id="wipe"><i></i><i></i><i></i><i></i></div>
 
