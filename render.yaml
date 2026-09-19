@@ -1,0 +1,5 @@
+services:
+  - type: web
+    name: ideo-case-studies
+    runtime: static
+    staticPublishPath: .
