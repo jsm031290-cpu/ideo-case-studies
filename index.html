@@ -31,9 +31,9 @@ html.has-cur .c-dot,html.has-cur .c-ring{display:block}
 html.has-cur,html.has-cur *{cursor:none!important}
 .c-dot{width:6px;height:6px;background:#fff;mix-blend-mode:difference}
 .c-ring{width:38px;height:38px;border:1px solid #fff;mix-blend-mode:difference;display:grid;place-items:center;
-  transition:width .45s var(--ease),height .45s var(--ease),background .3s,border-color .3s}
+  transition:width .45s var(--ease),height .45s var(--ease),margin .45s var(--ease),background .3s,border-color .3s}
 .c-ring.hov{width:58px;height:58px}
-.c-ring.lab{width:112px;height:112px;background:var(--r);border-color:var(--r);mix-blend-mode:normal}
+.c-ring.lab{width:104px;height:104px;margin:70px 0 0 70px;/* GSAP owns translate (centering) — margin pushes the label below-right of the pointer so it never covers what you point at */background:var(--r);border-color:var(--r);mix-blend-mode:normal}
 .c-ring::after{content:attr(data-label);font:600 11px/1 Inter;letter-spacing:.12em;text-transform:uppercase;color:#fff;opacity:0;transition:opacity .2s}
 .c-ring.lab::after{opacity:1}
 
@@ -865,6 +865,32 @@ function replay() {
 $('#prog').addEventListener('click', e => { const b = e.target.closest('button'); if (b) goTo(+b.dataset.i, true); });
 $$('.ch.next').forEach(c => c.addEventListener('click', nextProject));
 $('#home').addEventListener('click', replay);
+
+/* Wheel / trackpad / swipe behave exactly like the arrow keys: one gesture =
+   one step (next build, or the next chapter once all builds are shown).
+   A gesture ends after 200ms of quiet, so trackpad inertia counts only once.
+   Capture phase + stopPropagation keeps Lenis from free-scrolling. */
+let armed = true, quiet;
+const stepMode = () => mode === 'case' && innerWidth > 820; // narrow screens: chapters are taller than the screen, keep free scroll
+addEventListener('wheel', e => {
+  if (!stepMode()) return;
+  e.preventDefault();
+  e.stopPropagation();
+  clearTimeout(quiet);
+  quiet = setTimeout(() => (armed = true), 200);
+  if (!armed || Math.abs(e.deltaY) < 6) return;
+  armed = false;
+  e.deltaY > 0 ? next() : prev();
+}, { passive: false, capture: true });
+let touchY = null;
+addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+addEventListener('touchmove', e => { if (stepMode()) e.preventDefault(); }, { passive: false });
+addEventListener('touchend', e => {
+  if (!stepMode() || touchY === null) return;
+  const dy = touchY - e.changedTouches[0].clientY;
+  touchY = null;
+  if (Math.abs(dy) > 40) dy > 0 ? next() : prev();
+});
 
 addEventListener('keydown', e => {
   const k = e.key;
