@@ -34,11 +34,10 @@ html.has-cur,html.has-cur *{cursor:none!important}
   transition:width .45s var(--ease),height .45s var(--ease),margin .45s var(--ease),background .3s,border-color .3s}
 .c-ring.hov{width:58px;height:58px}
 .c-ring.lab{width:104px;height:104px;margin:70px 0 0 70px;/* GSAP owns translate (centering) — margin pushes the label below-right of the pointer so it never covers what you point at */background:var(--r);border-color:var(--r);mix-blend-mode:normal}
-/* label runs around the inside of the ring and slowly turns */
-.c-ring svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;opacity:0;transition:opacity .25s;animation:ring-spin 9s linear infinite}
+/* one label, curved along the inside of the ring's top-left edge */
+.c-ring svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;opacity:0;transition:opacity .25s}
 .c-ring.lab svg{opacity:1;transition-delay:.15s}
 .c-ring text{font:600 10.5px Inter;letter-spacing:.14em;text-transform:uppercase;fill:#fff}
-@keyframes ring-spin{to{rotate:360deg}}
 
 /* ---------- header / progress ---------- */
 #hdr{position:fixed;inset:0 0 auto 0;height:68px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;z-index:50;
@@ -236,7 +235,7 @@ body.m-split #note{opacity:.55}
 </svg>
 
 <div class="c-dot" id="cDot"></div>
-<div class="c-ring" id="cRing"><svg viewBox="0 0 100 100" aria-hidden="true"><path id="cPath" fill="none" d="M50 50m-37 0a37 37 0 1 1 74 0a37 37 0 1 1-74 0"/><text><textPath id="cText" href="#cPath" lengthAdjust="spacing"></textPath></text></svg></div>
+<div class="c-ring" id="cRing"><svg viewBox="0 0 100 100" aria-hidden="true"><path id="cPath" fill="none" d="M50 87a37 37 0 1 1 0-74a37 37 0 1 1 0 74"/><text><textPath id="cText" href="#cPath" startOffset="37.5%" text-anchor="middle"></textPath></text></svg></div>
 
 <header id="hdr" style="visibility:hidden">
   <button id="home" data-cur="Replay"><svg id="miniLogo" aria-label="IDEO"></svg><span>Case studies</span></button>
@@ -863,11 +862,7 @@ if (matchMedia('(pointer:fine)').matches) {
   document.addEventListener('pointerover', e => {
     const t = e.target.closest('[data-cur]');
     const lab = t && t.dataset.cur;
-    if (lab && lab !== ring.dataset.label) { // fill the whole circle: repeat the word, stretch spacing to close the loop
-      const n = Math.max(1, Math.round(232 / (lab.length * 8.5 + 12)));
-      cText.textContent = (lab + ' • ').repeat(n);
-      cText.setAttribute('textLength', 232);
-    }
+    if (lab) cText.textContent = lab;
     ring.dataset.label = lab || '';
     ring.classList.toggle('lab', !!lab);
     ring.classList.toggle('hov', !lab && !!e.target.closest('a,button'));
