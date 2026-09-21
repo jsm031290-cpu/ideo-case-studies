@@ -34,8 +34,11 @@ html.has-cur,html.has-cur *{cursor:none!important}
   transition:width .45s var(--ease),height .45s var(--ease),margin .45s var(--ease),background .3s,border-color .3s}
 .c-ring.hov{width:58px;height:58px}
 .c-ring.lab{width:104px;height:104px;margin:70px 0 0 70px;/* GSAP owns translate (centering) — margin pushes the label below-right of the pointer so it never covers what you point at */background:var(--r);border-color:var(--r);mix-blend-mode:normal}
-.c-ring::after{content:attr(data-label);font:600 11px/1 Inter;letter-spacing:.12em;text-transform:uppercase;color:#fff;opacity:0;transition:opacity .2s}
-.c-ring.lab::after{opacity:1}
+/* label runs around the inside of the ring and slowly turns */
+.c-ring svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;opacity:0;transition:opacity .25s;animation:ring-spin 9s linear infinite}
+.c-ring.lab svg{opacity:1;transition-delay:.15s}
+.c-ring text{font:600 10.5px Inter;letter-spacing:.14em;text-transform:uppercase;fill:#fff}
+@keyframes ring-spin{to{rotate:360deg}}
 
 /* ---------- header / progress ---------- */
 #hdr{position:fixed;inset:0 0 auto 0;height:68px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;z-index:50;
@@ -233,7 +236,7 @@ body.m-split #note{opacity:.55}
 </svg>
 
 <div class="c-dot" id="cDot"></div>
-<div class="c-ring" id="cRing"></div>
+<div class="c-ring" id="cRing"><svg viewBox="0 0 100 100" aria-hidden="true"><path id="cPath" fill="none" d="M50 50m-37 0a37 37 0 1 1 74 0a37 37 0 1 1-74 0"/><text><textPath id="cText" href="#cPath" lengthAdjust="spacing"></textPath></text></svg></div>
 
 <header id="hdr" style="visibility:hidden">
   <button id="home" data-cur="Replay"><svg id="miniLogo" aria-label="IDEO"></svg><span>Case studies</span></button>
@@ -556,10 +559,11 @@ function playIntro(delay = 0, then) {
     moves.forEach(m => introTl.to(el, { ...m.v, duration: D, ease: 'expo.inOut' }, m.t));
   });
   introTl
-    .to(svg, { scale: 1.045, duration: .1, ease: 'power2.out', transformOrigin: '50% 50%' }, end + .02)
-    .to(svg, { scale: 1, duration: .6, ease: 'elastic.out(1,.45)' })
-    .to('#introCap', { autoAlpha: 1, y: 0, duration: .7, ease: 'expo.out' }, end + .15)
-    .to({}, { duration: 1 });
+    // locked in → the mark eases back into depth (fast start, long deceleration),
+    // holds a beat, then outro() lifts it to the header
+    .to(svg, { scale: .86, duration: 1.6, ease: 'expo.out', transformOrigin: '50% 50%' }, end + .05)
+    .to('#introCap', { autoAlpha: 1, y: 0, duration: .8, ease: 'expo.out' }, end + .25)
+    .to({}, { duration: .5 });
 }
 
 function outro(then) {
@@ -575,7 +579,9 @@ function outro(then) {
   const a = svg.getBoundingClientRect(), b = mini.getBoundingClientRect();
   gsap.timeline({ onComplete: () => { gsap.set('#intro', { autoAlpha: 0 }); gsap.set(mini, { autoAlpha: 1 }); then && then(); } })
     .to('#introCap', { autoAlpha: 0, duration: .25 }, 0)
-    .to(svg, { x: b.left - a.left, y: b.top - a.top, scale: b.width / a.width, transformOrigin: '0 0', duration: 1, ease: 'expo.inOut' }, 0)
+    // centre-to-centre move (the mark is already scaled around its centre)
+    .to(svg, { x: b.left + b.width / 2 - (a.left + a.width / 2), y: b.top + b.height / 2 - (a.top + a.height / 2),
+      scale: b.width / (a.width / gsap.getProperty(svg, 'scale')), duration: 1.1, ease: 'expo.inOut' }, 0)
     .to('#intro .ibg', { autoAlpha: 0, duration: .4 }, .25)
     .add(splitIn(), .1);
 }
@@ -850,13 +856,18 @@ addEventListener('keydown', e => {
 /* ---------- cursor ---------- */
 if (matchMedia('(pointer:fine)').matches) {
   document.documentElement.classList.add('has-cur');
-  const dot = $('#cDot'), ring = $('#cRing');
+  const dot = $('#cDot'), ring = $('#cRing'), cText = $('#cText');
   const dx = gsap.quickTo(dot, 'x', { duration: .1 }), dy = gsap.quickTo(dot, 'y', { duration: .1 });
   const rx = gsap.quickTo(ring, 'x', { duration: .5, ease: 'power3' }), ry = gsap.quickTo(ring, 'y', { duration: .5, ease: 'power3' });
   addEventListener('pointermove', e => { dx(e.clientX); dy(e.clientY); rx(e.clientX); ry(e.clientY); });
   document.addEventListener('pointerover', e => {
     const t = e.target.closest('[data-cur]');
     const lab = t && t.dataset.cur;
+    if (lab && lab !== ring.dataset.label) { // fill the whole circle: repeat the word, stretch spacing to close the loop
+      const n = Math.max(1, Math.round(232 / (lab.length * 8.5 + 12)));
+      cText.textContent = (lab + ' • ').repeat(n);
+      cText.setAttribute('textLength', 232);
+    }
     ring.dataset.label = lab || '';
     ring.classList.toggle('lab', !!lab);
     ring.classList.toggle('hov', !lab && !!e.target.closest('a,button'));
