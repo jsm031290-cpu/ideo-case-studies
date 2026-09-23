@@ -115,6 +115,14 @@ body.m-split #note{opacity:.55}
 .ln>span{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
 .ln>span>span{display:block}
 .lead{font-size:clamp(1rem,1.25vw,1.3rem);line-height:1.45;color:var(--mute);margin-top:3vh}
+.deck{font-size:clamp(.92rem,1vw,1.08rem);line-height:1.55;color:var(--mute);margin-top:2.6vh;max-width:52ch}
+.deck b{color:var(--fg);font-weight:500}
+.credits{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:2.4vh;font:500 10px/1.4 Inter;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.credits b{color:var(--fg);font-weight:600}
+.method{display:flex;flex-wrap:wrap;gap:8px;margin-top:2.4vh}
+.method span{padding:8px 14px;border:1px solid var(--line);border-radius:99px;font-size:13px;color:var(--fg)}
+.note{border-left:2px solid var(--acc);padding-left:16px;margin-top:1.4vh;font-size:14px;line-height:1.5;color:var(--mute)}
+.note b{display:block;font:600 10px/1 Inter;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
 .acc{color:var(--acc)}
 .tag{font-family:"Inter Tight";font-weight:500;font-size:clamp(1.3rem,1.9vw,2.1rem);letter-spacing:-.02em;margin-top:4vh}
 .foot{position:absolute;left:clamp(24px,6vw,110px);bottom:6vh;display:flex;align-items:center;gap:14px;font:500 10px/1 Inter;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
@@ -168,16 +176,16 @@ body.m-split #note{opacity:.55}
 .labels span{font:600 11px/1 Inter;letter-spacing:.16em;text-transform:uppercase;text-align:center;border-left:1px solid var(--line)}
 .labels span:first-child{border:0}
 .wall{display:grid;grid-template-columns:1.7fr 1fr;gap:clamp(24px,4vw,64px);height:100%}
-.wall .ph{height:52vh;margin-top:5vh}
-.wall aside{align-self:center;display:flex;flex-direction:column;gap:16px;font-size:15px;line-height:1.5}
+.wall .ph{height:44vh;margin-top:4vh}
+.wall aside{align-self:center;display:flex;flex-direction:column;gap:12px;font-size:14px;line-height:1.5}
 .wall aside hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 .wall aside ul{list-style:none;display:grid;gap:10px;font:500 1.15rem "Inter Tight"}
-.orbs{display:flex;align-items:center;justify-content:center;gap:clamp(24px,5vw,90px);margin-top:6vh}
-.orb{width:clamp(170px,17vw,270px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font:600 13px/1.4 Inter;letter-spacing:.18em;text-transform:uppercase;text-align:center}
+.orbs{display:flex;align-items:center;justify-content:center;gap:clamp(24px,5vw,90px);margin-top:3.5vh}
+.orb{width:clamp(150px,15vw,240px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font:600 13px/1.4 Inter;letter-spacing:.18em;text-transform:uppercase;text-align:center}
 .orb.d{background:radial-gradient(circle at 35% 30%,#3b4047,#15181c 72%);box-shadow:inset 0 0 0 1px #2a2e34}
 .orb.r{background:radial-gradient(circle at 34% 28%,#ff9d8c,#ec3d36 42%,#5d0c0d 100%);box-shadow:0 0 90px rgba(239,70,64,.45)}
 .orbs .arr .ic{width:56px;stroke-width:1}
-.minds{display:grid;grid-template-columns:1fr 1fr;margin-top:7vh;border-top:1px solid var(--line)}
+.minds{display:grid;grid-template-columns:1fr 1fr;margin-top:4vh;border-top:1px solid var(--line)}
 .minds>div{padding:28px 32px 0;display:grid;grid-template-columns:auto 1fr;gap:6px 16px}
 .minds>div+div{border-left:1px solid var(--line)}
 .minds b{font:500 1.15rem "Inter Tight"}
@@ -198,6 +206,19 @@ body.m-split #note{opacity:.55}
 .next{display:flex;flex-direction:column;justify-content:flex-end}
 .next .lead{color:#c9ccd0}
 
+/* short screens (small laptops): trim the added copy so a chapter still fits one screen */
+@media (max-height:780px){
+  .deck{font-size:.88rem;line-height:1.5;margin-top:1.8vh}
+  .credits{display:none}
+  .method{margin-top:1.6vh}
+  .method span{padding:6px 12px;font-size:12px}
+  .note{font-size:13px}
+  .trio{margin-top:4vh}
+  .wall .ph{height:36vh}
+  .h{margin-top:3vh}
+  .lead,.tag{margin-top:2vh}
+  .chips{margin-top:4vh}
+}
 @media (max-width:820px){
   #split{flex-direction:column}
   .col{max-width:none}
@@ -287,6 +308,7 @@ body.m-split #note{opacity:.55}
       <h1 class="h xl ln"><span><span>A better way</span></span><span><span>to teach writing,</span></span><span><span>with AI.</span></span></h1>
       <p class="tag" data-rv>Ethiqly <span style="opacity:.4">×</span> IDEO</p>
       <p class="lead" data-rv>Human-centered AI<br>for real learning.</p>
+      <div class="credits" data-rv><span><b>Scope</b> · Research · Product strategy · Interaction design</span><span><b>Field</b> · Classroom writing instruction</span></div>
     </div>
     <div class="foot" data-rv>People → Learning → Brighter futures</div>
   </section>
@@ -296,6 +318,7 @@ body.m-split #note{opacity:.55}
     <div class="col">
       <div class="eyebrow" data-rv><b>02</b><span>The challenge</span><i></i></div>
       <h2 class="h ln"><span><span>Students needed</span></span><span><span>more personalized</span></span><span><span>feedback.</span></span></h2>
+      <p class="deck" data-rv>In a class of thirty, comments come back days later and rarely speak to the writer in front of them. Teachers wanted to reach every student; students wanted to know what to fix next.</p>
       <div class="trio">
         <div data-step="1" data-rv><div class="circ-ic"><svg class="ic"><use href="#i-users"/></svg></div><b class="k">Large classes</b><p>Limited<br>attention</p></div>
         <div data-step="2" data-rv><div class="circ-ic"><svg class="ic"><use href="#i-clock"/></svg></div><b class="k">Limited time</b><p>Hard to give<br>detailed feedback</p></div>
@@ -308,6 +331,8 @@ body.m-split #note{opacity:.55}
     <div class="col" style="max-width:38%">
       <div class="eyebrow" data-rv><b>03</b><span>Research / Insight</span><i></i></div>
       <h2 class="h ln"><span><span>We listened</span></span><span><span>to students</span></span><span><span>and teachers.</span></span></h2>
+      <p class="deck" data-rv>Classroom observation and interviews across subjects and skill levels, with teachers brought in as co-designers rather than reviewers.</p>
+      <div class="method" data-rv><span>Classroom observation</span><span>Student interviews</span><span>Teacher co-design</span></div>
     </div>
     <div class="quotes">
       <figure class="qcard" data-step="1" data-rv>
@@ -325,6 +350,7 @@ body.m-split #note{opacity:.55}
     <div class="col" style="max-width:40%">
       <div class="eyebrow" data-rv><b>04</b><span>The solution</span><i></i></div>
       <h2 class="h ln"><span><span>An AI writing tool</span></span><span><span>designed for</span></span><span><span>real classrooms.</span></span></h2>
+      <p class="deck" data-rv>Feedback that names what to fix in language a student can act on — clarity, strength, specificity — while the teacher keeps the final word on every piece.</p>
       <div class="chips">
         <span class="chip a" data-step="2" data-rv>AI Feedback</span>
         <span class="chip" data-step="2" data-rv>Guided Learning</span>
@@ -350,7 +376,7 @@ body.m-split #note{opacity:.55}
     <div class="col">
       <div class="eyebrow" data-rv><b>05</b><span>Impact</span><i></i></div>
       <h2 class="h ln"><span><span>From pilot to</span></span><span><span>global classrooms.</span></span></h2>
-      <p class="lead" data-rv>Now used in <b class="acc">25 countries.</b></p>
+      <p class="deck" data-rv>A pilot in a handful of classrooms became everyday practice, then spread school by school. Now used in <b>25 countries</b>.</p>
       <div data-step="1" data-rv style="margin-top:5vh"><div class="big" data-count="25">25</div><div class="cap" style="margin-top:10px">countries</div></div>
       <div class="stats">
         <div data-step="2" data-rv><div class="circ-ic"><svg class="ic"><use href="#i-bars"/></svg></div>More<br>engagement</div>
@@ -363,6 +389,7 @@ body.m-split #note{opacity:.55}
   <section class="ch light" data-title="Key insight">
     <div class="eyebrow" data-rv><b>06</b><span>Key insight</span><i></i></div>
     <h2 class="h ln"><span><span>Technology amplifies</span></span><span><span>human judgment.</span></span></h2>
+    <p class="deck" data-rv>The tool does not grade for teachers. It buys them time and evidence, so their judgment reaches every student instead of the first ten essays.</p>
     <div class="venn">
       <div class="c" style="background:var(--e-soft)" data-step="1" data-rv="left">Human<br>insight</div>
       <div class="plus" data-step="2" data-rv="pop">+</div>
@@ -393,6 +420,7 @@ body.m-split #note{opacity:.55}
       <h1 class="h xl ln"><span><span>Culture</span></span><span><span>as Catalyst</span></span></h1>
       <p class="tag" data-rv>Moderna <span style="opacity:.4">×</span> IDEO</p>
       <p class="lead" data-rv>Preserving the culture<br>that drives innovation.</p>
+      <div class="credits" data-rv><span><b>Scope</b> · Culture research · Behavior codification · Rollout</span><span><b>Field</b> · Biotech, post-COVID scale-up</span></div>
     </div>
     <div class="foot" data-rv style="z-index:2">People → Culture → A healthier tomorrow</div>
   </section>
@@ -400,6 +428,7 @@ body.m-split #note{opacity:.55}
   <section class="ch light" data-title="The challenge">
     <div class="eyebrow" data-rv><b>02</b><span>The challenge</span><i></i></div>
     <h2 class="h ln"><span><span>Rapid growth</span></span><span><span>put culture at risk.</span></span></h2>
+    <p class="deck" data-rv>After COVID-19, hundreds and then thousands of people joined in months. The fast, experimental way of working had never been written down — it was passed on in person, and there were no longer enough people to pass it on.</p>
     <div class="growth">
       <div data-step="1" data-rv>
         <div class="cap">2020</div><div class="n">&lt; 1,000</div><div class="lead" style="margin-top:6px">employees</div>
@@ -422,6 +451,7 @@ body.m-split #note{opacity:.55}
       <div>
         <div class="eyebrow" data-rv><b>03</b><span>Research</span><i></i></div>
         <h2 class="h ln"><span><span>Listen to the people</span></span><span><span>who lived the culture.</span></span></h2>
+        <p class="deck" data-rv>We asked long-tenured employees for stories of what they actually did, not what the company says it values — then tested the patterns with new hires, veterans and teams across functions.</p>
         <div class="ph"><img src="img/m2.webp" alt="Team breaking a wall to move equipment"></div>
       </div>
       <aside>
@@ -430,6 +460,7 @@ body.m-split #note{opacity:.55}
         <span data-rv>→</span>
         <p class="k acc" data-step="1" data-rv style="font-size:1.4rem">They broke the wall.</p>
         <div data-step="2" data-rv><hr><div class="cap" style="color:var(--fg);margin-bottom:16px">Key behaviors</div><ul><li>Speed</li><li>Action</li><li>Ownership</li></ul></div>
+        <div class="note" data-step="3" data-rv><b>Key finding</b>The edge was never only the science. It was a set of behaviors that kept repeating: fast calls, appetite for risk, ownership past the job description.</div>
       </aside>
     </div>
   </section>
@@ -437,10 +468,11 @@ body.m-split #note{opacity:.55}
   <section class="ch dark" data-title="From stories to mindsets">
     <div class="eyebrow" data-rv><b>04</b><span>From stories to mindsets</span><i></i></div>
     <h2 class="h ln"><span><span>Stories became</span></span><span><span>actionable Mindsets.</span></span></h2>
+    <p class="deck" data-rv>The stories were distilled into <b>12 Moderna Mindsets</b> — each one written as a behavior people could act on, in the words employees used themselves. Two of them:</p>
     <div class="orbs">
       <div class="orb d" data-rv="pop">Real<br>stories</div>
       <div class="arr" data-step="1" data-rv="wipe"><svg class="ic"><use href="#i-arrow"/></svg></div>
-      <div class="orb r" data-step="1" data-rv="left">Mindsets</div>
+      <div class="orb r" data-step="1" data-rv="left">12<br>Mindsets</div>
     </div>
     <div class="minds">
       <div data-step="2" data-rv><svg class="ic"><use href="#i-bolt"/></svg><b>Act with urgency</b><p>“Action today compounds the lives saved tomorrow.”</p></div>
@@ -451,6 +483,7 @@ body.m-split #note{opacity:.55}
   <section class="ch light" data-title="Application">
     <div class="eyebrow" data-rv><b>05</b><span>Application</span><i></i></div>
     <h2 class="h ln"><span><span>Mindsets became part of</span></span><span><span>the employee experience.</span></span></h2>
+    <p class="deck" data-rv>Mindsets left the deck and entered the systems people meet every day — hiring, onboarding, workshops, performance conversations — so the culture is taught rather than inherited by luck.</p>
     <div class="flow" data-step="1">
       <div data-rv><div class="circ-ic"><svg class="ic"><use href="#i-doc"/></svg></div>Mindsets</div>
       <div class="arr" data-rv="left"><svg class="ic"><use href="#i-arrow"/></svg></div>
@@ -468,6 +501,7 @@ body.m-split #note{opacity:.55}
     <div class="rel">
       <div class="eyebrow" data-rv><b>06</b><span>Impact</span><i></i></div>
       <h2 class="h ln"><span><span>Culture became</span></span><span><span>a foundation for</span></span><span><span>continued innovation.</span></span></h2>
+      <p class="deck" data-rv>New and long-tenured employees now describe how work gets done here the same way, and the Mindsets keep spreading across the employee lifecycle.</p>
       <div class="ilist">
         <div data-step="1" data-rv><svg class="ic"><use href="#i-bars"/></svg>Clearer expectations</div>
         <div data-step="1" data-rv><svg class="ic"><use href="#i-target"/></svg>Consistent behavior</div>
@@ -476,6 +510,22 @@ body.m-split #note{opacity:.55}
       </div>
     </div>
     <div class="motto" data-step="2" data-rv style="z-index:2">Culture can be designed.</div>
+  </section>
+
+  <section class="ch light" data-title="Key insight">
+    <div class="eyebrow" data-rv><b>07</b><span>Key insight</span><i></i></div>
+    <h2 class="h ln"><span><span>Culture is designed from</span></span><span><span>behavior, not from slogans.</span></span></h2>
+    <p class="deck" data-rv>We did not start by making the artifact. We started with what people already did, and let the poster, the workshop and the process come last.</p>
+    <div class="flow" data-step="1">
+      <div data-rv><div class="circ-ic"><svg class="ic"><use href="#i-users"/></svg></div>Observe<br>behavior</div>
+      <div class="arr" data-rv="left"><svg class="ic"><use href="#i-arrow"/></svg></div>
+      <div data-rv><div class="circ-ic"><svg class="ic"><use href="#i-bars"/></svg></div>Find<br>patterns</div>
+      <div class="arr" data-rv="left"><svg class="ic"><use href="#i-arrow"/></svg></div>
+      <div data-rv><div class="circ-ic"><svg class="ic"><use href="#i-doc"/></svg></div>Write<br>principles</div>
+      <div class="arr" data-rv="left"><svg class="ic"><use href="#i-arrow"/></svg></div>
+      <div data-rv><div class="circ-ic"><svg class="ic"><use href="#i-cycle"/></svg></div>Embed in<br>systems</div>
+    </div>
+    <div class="motto" data-step="2" data-rv>Human-centered design, applied to an organization.</div>
   </section>
 
   <section class="ch light next" data-title="Next project" data-cur="Next">
@@ -849,7 +899,7 @@ addEventListener('keydown', e => {
   else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(k)) { e.preventDefault(); prev(); }
   else if (k === 'Enter' && chs[cur].classList.contains('next')) nextProject();
   else if (k === 'Escape') toSplit();
-  else if (k >= '1' && k <= '6') goTo(+k - 1, true);
+  else if (k >= '1' && k <= '9') goTo(+k - 1, true);
 });
 
 /* ---------- cursor ---------- */
