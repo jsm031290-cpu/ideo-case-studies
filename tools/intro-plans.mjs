@@ -14,7 +14,8 @@ const BOX = [ // piece bounding boxes in viewBox units [x, y, w, h]
   [0, 0, 26, 50], [0, 50, 26, 50], [42, 0, 26, 100], [68, 0, 50, 100], [134, 0, 26, 100],
   [160, 0, 40, 24], [160, 38, 32, 24], [160, 76, 40, 24], [216, 0, 50, 100], [266, 0, 50, 100],
 ];
-const U = 34, BEAT = .13, D = .3, T0 = .6;
+const U = 34, BEAT = .16, D = .5, T0 = .6;
+const LETTER = [0, 0, 1, 1, 2, 2, 2, 2, 3, 3]; // piece → letter, so a letter's pieces travel together
 const EASE = gsap.parseEase('expo.inOut');
 const rnd = n => Math.floor(Math.random() * n);
 const shuffle = a => a.map(v => [Math.random(), v]).sort((p, q) => p[0] - q[0]).map(p => p[1]);
@@ -50,19 +51,22 @@ function hit(P, i, t0, t1) {
 }
 function explode() {
   const P = BOX.map(() => ({ from: { x: 0, y: 0, rotation: 0 }, moves: [] }));
-  const want = BOX.map(() => 3 + rnd(2)), next = BOX.map(() => rnd(5)), last = BOX.map(() => '');
+  // two long moves per piece instead of 3-4 short hops, and pieces leave by letter
+  // (right to left) so that, played in reverse, the word builds I → D → E → O
+  const want = BOX.map(() => 2), next = BOX.map((_, i) => (3 - LETTER[i]) * 2 + rnd(2)), last = BOX.map(() => '');
   for (let b = 0; b < 80 && P.some((p, i) => p.moves.length < want[i]); b++) {
     const t = b * BEAT;
     for (const i of shuffle([...P.keys()])) {
       if (P[i].moves.length >= want[i] || next[i] > b) continue;
       const cands = shuffle(['x', 'y', 'rotation'].filter(k => k !== last[i])).flatMap(k => shuffle([-1, 1]).map(sg => {
-        const step = k === 'rotation' ? 90 : k === 'x' ? (1 + rnd(3)) * U : (1 + rnd(2)) * U;
+        const step = k === 'rotation' ? 90 : k === 'x' ? (1 + rnd(2)) * U : (1 + rnd(1)) * U;
         return { [k]: val(P[i], k, t) + sg * step };
       }));
       next[i] = b + 1; // retry next beat if every candidate collides
       for (const v of cands) {
         P[i].moves.push({ t, v });
-        if (!hit(P, i, t, t + D)) { last[i] = Object.keys(v)[0]; next[i] = b + Math.ceil(D / BEAT) + rnd(2); break; }
+        // a piece's two moves overlap slightly, so it flows instead of stopping between them
+        if (!hit(P, i, t, t + D)) { last[i] = Object.keys(v)[0]; next[i] = b + Math.max(1, Math.ceil(D / BEAT) - 2); break; }
         P[i].moves.pop();
       }
     }
@@ -90,7 +94,7 @@ const r = n => Math.round(n * 1000) / 1000;
 const out = [];
 while (out.length < 16) {
   const p = planIntro();
-  if (p.end > 5.6) continue;
+  if (p.end > 4.6) continue;
   out.push({ end: r(p.end), plan: p.plan.map(q => ({
     from: { x: r(q.from.x), y: r(q.from.y), rotation: r(q.from.rotation) },
     moves: q.moves.map(m => ({ t: r(m.t), v: Object.fromEntries(Object.entries(m.v).map(([k, v]) => [k, r(v)])) })),
